@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/models/category.dart';
+import 'package:food_app/screens/meals.dart';
 
 class CategoryItem extends StatelessWidget {
-  const CategoryItem({super.key, required this.category});
+  const CategoryItem(
+      {super.key, required this.category, required this.onSelectedCategory});
 
+  final void Function() onSelectedCategory;
   final Category category;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onSelectedCategory,
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(16),
       child: Container(
