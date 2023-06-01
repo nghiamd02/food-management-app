@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/models/meal.dart';
-import 'package:food_app/widgets/meal_item_trait.dart';
+import 'package:food_app/widgets/meals/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem({super.key, required this.meal});
+  const MealItem({super.key, required this.meal, required this.onMealSelected});
   final Meal meal;
+  final void Function() onMealSelected;
 
   String get complexity {
     return meal.complexity.name[0].toUpperCase() +
@@ -27,7 +28,7 @@ class MealItem extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
-        onTap: () {},
+        onTap: onMealSelected,
         child: Stack(
           children: [
             FadeInImage(
