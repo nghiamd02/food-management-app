@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:food_app/models/meal.dart';
 import 'package:food_app/widgets/meals/meal_description.dart';
+import 'package:food_app/providers/fav_meals_provider.dart';
 
-class MealDetails extends StatelessWidget {
-  const MealDetails(
-      {super.key, required this.meal, required this.onToggleFavouriteIcon});
+class MealDetails extends ConsumerWidget {
+  const MealDetails({super.key, required this.meal});
   final Meal meal;
-  final void Function(Meal meal) onToggleFavouriteIcon;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favList = ref.watch(favMealsProvider);
+    final isAdded = favList.contains(meal);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
-              tooltip: 'Add Favorite',
               onPressed: () {
-                onToggleFavouriteIcon(meal);
+                final isAdded = ref
+                    .read(favMealsProvider.notifier)
+                    .onToggleFavouriteIcon(meal);
+
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(isAdded
+                        ? "Added to your favorite successfully"
+                        : "Removed from your favorite")));
               },
-              icon: const Icon(Icons.star_border)),
+              icon: Icon(isAdded ? Icons.star : Icons.star_border)),
         ],
       ),
       body: SingleChildScrollView(
@@ -30,7 +40,7 @@ class MealDetails extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           MealDescription(title: 'Ingredients', details: meal.ingredients),
-          MealDescription(title: 'Ingredients', details: meal.steps),
+          MealDescription(title: 'Steps', details: meal.steps),
         ]),
       ),
     );

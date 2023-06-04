@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/data/categories_data.dart';
-import 'package:food_app/screens/categories.dart';
-import 'package:food_app/screens/meals.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:food_app/screens/navigation_screen.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +13,7 @@ final theme = ThemeData(
   textTheme: GoogleFonts.robotoTextTheme(),
 );
 
-void main() => runApp(const MyApp());
+void main() => runApp(const ProviderScope(child: MyApp()));
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

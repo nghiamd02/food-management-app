@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:food_app/providers/filter_provider.dart';
 
-class FilterItem extends StatelessWidget {
+class FilterItem extends ConsumerWidget {
   const FilterItem(
       {super.key,
       required this.title,
       required this.subtitle,
-      required this.isSet,
-      required this.onFilterTap});
+      required this.filterOption});
   final String title;
   final String subtitle;
-  final bool isSet;
+  final Filter filterOption;
 
-  final void Function(bool isActive, String type) onFilterTap;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeFilter = ref.watch(filterProvider);
     return SwitchListTile(
-      value: isSet,
+      value: activeFilter[filterOption]!,
       onChanged: (isActive) => {
-        onFilterTap(isActive, title),
+        ref.read(filterProvider.notifier).setFilter(filterOption, isActive),
       },
       title: Text(
         title,
