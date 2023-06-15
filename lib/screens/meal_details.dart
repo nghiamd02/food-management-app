@@ -17,27 +17,43 @@ class MealDetails extends ConsumerWidget {
         title: Text(meal.title),
         actions: [
           IconButton(
-              onPressed: () {
-                final isAdded = ref
-                    .read(favMealsProvider.notifier)
-                    .onToggleFavouriteIcon(meal);
+            onPressed: () {
+              final isAdded = ref
+                  .read(favMealsProvider.notifier)
+                  .onToggleFavouriteIcon(meal);
 
-                ScaffoldMessenger.of(context).clearSnackBars();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(isAdded
-                        ? "Added to your favorite successfully"
-                        : "Removed from your favorite")));
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(isAdded
+                      ? "Added to your favorite successfully"
+                      : "Removed from your favorite")));
+            },
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween(begin: 0.9, end: 1.0).animate(animation),
+                  child: child,
+                );
               },
-              icon: Icon(isAdded ? Icons.star : Icons.star_border)),
+              child: Icon(
+                isAdded ? Icons.star : Icons.star_border,
+                key: ValueKey(isAdded),
+              ),
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(children: [
-          Image.network(
-            meal.imageUrl,
-            height: 300,
-            width: double.infinity,
-            fit: BoxFit.cover,
+          Hero(
+            tag: meal.id,
+            child: Image.network(
+              meal.imageUrl,
+              height: 300,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
           ),
           MealDescription(title: 'Ingredients', details: meal.ingredients),
           MealDescription(title: 'Steps', details: meal.steps),
